@@ -15,55 +15,54 @@ namespace BinarySearchTree
         //5. 트리안에 데이터를 전체 출력할 수 있어야 한다
 
         Node rootNode = null;
-        Node node;
 
-        void Insert( int value )
+        public void Insert( int value )
         {
-            Node valueNode = new Node(value);
+            Node newNode = new Node(value);
 
             //2. 첫 삽입에 root node가 null이면 루트 노드를 생성한다
             if( rootNode == null )
             {
-                rootNode = valueNode;
+                rootNode = newNode;
+                return;
             }
+
+            Node parentNode = FindParentNodeForInsert(rootNode);
+
+            // 새로운 노드의 부모 셋팅
+            newNode.SetParents(parentNode);
+
+            if( parentNode < newNode )
+                parentNode.SetRight(newNode);
             else
-            {
-                node = rootNode;
-                CheckPosition();
-            }
+                parentNode.SetLeft(newNode);
 
-            void CheckPosition()
+            Node FindParentNodeForInsert( Node currentNode )
             {
-                if( valueNode < node )
+                if( newNode < currentNode )
                 {
-                    Node parents = node;
-                    node = node.GetLeft();
-                    node.SetParents(node);
-
-                    if( node == null )
+                    if( currentNode.GetLeft() == null )
                     {
-                        node = valueNode;
+                        return currentNode;
                     }
                     else
                     {
-                        CheckPosition();
+                        return FindParentNodeForInsert(currentNode.GetLeft());
                     }
                 }
-
-                else if( valueNode > node )
+                else if( newNode > currentNode )
                 {
-                    node.SetParents(node);
-                    node = node.GetRight();
-
-                    if( node == null )
+                    if( currentNode.GetRight() == null )
                     {
-                        node = valueNode;
+                        return currentNode;
                     }
                     else
                     {
-                        CheckPosition();
+                        return FindParentNodeForInsert(currentNode.GetRight());
                     }
                 }
+
+                return null; // 중복..일 때?
             }
         }
 
