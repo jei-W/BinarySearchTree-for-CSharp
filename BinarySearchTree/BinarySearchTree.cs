@@ -8,34 +8,35 @@ namespace BinarySearchTree
 {
     class BinarySearchTree
     {
-        //1. 처음 rootnode는 null이다.
-
-        //3. 삽입할 때, 트리의 재배치는 하지 않는다.
-        //4. 삭제할 때만 트리의 재배치를 수행한다.
-        //5. 트리안에 데이터를 전체 출력할 수 있어야 한다
-
         Node rootNode = null;
 
         public void Insert( int value )
         {
             Node newNode = new Node(value);
 
-            //2. 첫 삽입에 root node가 null이면 루트 노드를 생성한다
+            //첫 삽입에 root node가 null이면 루트 노드를 생성한다
             if( rootNode == null )
             {
                 rootNode = newNode;
                 return;
             }
 
-            Node parentNode = FindParentNodeForInsert(rootNode);
+            try
+            {
+                Node parentNode = FindParentNodeForInsert(rootNode);
 
-            // 새로운 노드의 부모 셋팅
-            newNode.SetParents(parentNode);
+                // 새로운 노드의 부모 셋팅
+                newNode.SetParents(parentNode);
 
-            if( parentNode < newNode )
-                parentNode.SetRight(newNode);
-            else
-                parentNode.SetLeft(newNode);
+                if( parentNode < newNode )
+                    parentNode.SetRight(newNode);
+                else
+                    parentNode.SetLeft(newNode);
+            }
+            catch( Exception e )
+            {
+                Console.WriteLine(e.Message);
+            }
 
             Node FindParentNodeForInsert( Node currentNode )
             {
@@ -62,13 +63,54 @@ namespace BinarySearchTree
                     }
                 }
 
-                return null; // 중복..일 때?
+                else throw new Exception("이미 저장된 데이터와 같은 값의 데이터는 저장할 수 없습니다.");
             }
         }
 
         void Remove( int value )
         {
+            Node removePosition = Find(value);
 
+            if( removePosition.GetLeft() == null )
+            {
+                if( removePosition.GetRight() == null )
+                    removePosition = null;
+
+                else
+                {
+                    removePosition = FindSmallestAtRightside(removePosition.GetRight());
+                }
+            }
+
+            else
+                removePosition = FindBiggestAtLeftside(removePosition.GetLeft());
+
+
+            Node FindBiggestAtLeftside(Node currentPosition)
+            {
+                if( currentPosition.GetRight() == null )
+                {
+                    if( currentPosition.GetLeft() == null )
+                        return currentPosition;
+                    else
+                        return FindBiggestAtLeftside(currentPosition.GetLeft());
+                }
+                else
+                    return FindBiggestAtLeftside(currentPosition.GetRight());
+            }
+
+            Node FindSmallestAtRightside( Node currentPosition )
+            {
+                if( currentPosition.GetLeft() == null )
+                {
+                    if( currentPosition.GetRight() == null )
+                        return currentPosition;
+                    else
+                        return FindSmallestAtRightside(currentPosition.GetRight());
+                }
+                else
+                    return FindSmallestAtRightside(currentPosition.GetLeft());
+            }
         }
 
         void Print()
@@ -76,9 +118,32 @@ namespace BinarySearchTree
 
         }
 
-        void Find( int value )
+        Node Find( int value )
         {
+            Node currentNode = rootNode;
+            return FindNode();
 
+
+            Node FindNode()
+            {
+                if( currentNode == value )
+                {
+                    return currentNode;
+                }
+                else
+                {
+                    if( currentNode > value )
+                    {
+                        currentNode = currentNode.GetLeft();
+                        return FindNode();
+                    }
+                    else
+                    {
+                        currentNode = currentNode.GetRight();
+                        return FindNode();
+                    }
+                }
+            }
         }
     }
 }
