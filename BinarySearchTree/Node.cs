@@ -8,7 +8,7 @@ namespace BinarySearchTree
 {
     class Node
     {
-        Node parents = null; //왜 nullable연산자를 쓰지 않고 널이 가능할까?
+        Node parents = null;
         Node left = null;
         Node right = null;       
 
@@ -69,6 +69,16 @@ namespace BinarySearchTree
         public static bool operator >( Node lhs, int rhs )
         {
             return lhs.value > rhs;
+        }
+
+        public static bool operator ==( Node lhs, int rhs )
+        {
+            return lhs.value == rhs;
+        }
+
+        public static bool operator !=( Node lhs, int rhs )
+        {
+            return lhs.value == rhs;
         }
         #endregion
     }
