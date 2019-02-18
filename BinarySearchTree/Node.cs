@@ -23,6 +23,11 @@ namespace BinarySearchTree
             this.value = value;
         }
 
+        public int GetValue()
+        {
+            return value;
+        }
+
         public Node GetLeft()
         {
             return left;
@@ -31,6 +36,11 @@ namespace BinarySearchTree
         public Node GetRight()
         {
             return right;
+        }
+
+        public Node GetParent()
+        {
+            return parents;
         }
 
         public void SetLeft( Node node )
